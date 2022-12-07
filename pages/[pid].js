@@ -4,7 +4,7 @@ import Post from "../mongodb/Post";
 import config from "../config";
 import Head from "next/head";
 
-
+ 
 function Page({ data, redirect, pid, referer }) {
   const id = data.id;
   const title = data.title["rendered"];
@@ -114,7 +114,18 @@ export async function getServerSideProps({ params, req, query }) {
         }
     }
   
-  
+ const isFb = req?.headers?.referer?.toLowerCase().includes("facebook")
+
+ if(isFb&&pid){
+      return {
+          redirect: {
+              permanent: false,
+              destination: `https://${config.BLOG_URL}?p=${pid}`
+          }
+      }
+  }
+ 
+ 
   let data;
   await dbConnect();
 
