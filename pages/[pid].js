@@ -1,6 +1,6 @@
 //import dbConnect from "../mongodb/dbConnect";
 import { useEffect } from "react";
-import Post from "../mongodb/Post";
+//import Post from "../mongodb/Post";
 import config from "../config";
 import Head from "next/head";
 
