@@ -117,7 +117,7 @@ export async function getServerSideProps({ params, req, query }) {
 
  
   let data;
-  await dbConnect();
+  //await dbConnect();
 
   //check if post exist in mognodb
   let post = await Post.findOne({ pid });
