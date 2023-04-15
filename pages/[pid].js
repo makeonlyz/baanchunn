@@ -1,6 +1,6 @@
-// import dbConnect from "../mongodb/dbConnect";
+import dbConnect from "../mongodb/dbConnect";
 import { useEffect } from "react";
-// import Post from "../mongodb/Post";
+import Post from "../mongodb/Post";
 import config from "../config";
 import Head from "next/head";
 
@@ -14,9 +14,9 @@ function Page({ data, redirect, pid, referer }) {
   let featurecontent = "";
   if (featureimage) {
 //     featureimage = featureimage
-//       .replaceAll(https://${config.BLOG_URL}/wp-content, "/api/wp-content")
+//       .replaceAll(`https://${config.BLOG_URL}/wp-content`, "/api/wp-content")
 //       .replaceAll(
-//         https://www.${config.BLOG_URL}/wp-content,
+//         `https://www.${config.BLOG_URL}/wp-content`,
 //         "/api/wp-content"
 //       );
     featurecontent = '<img  src="' + featureimage + '" >';
@@ -27,7 +27,7 @@ function Page({ data, redirect, pid, referer }) {
     featurecontent = "";
     if (typeof window !== "undefined") {
       let doc = new DOMParser().parseFromString(
-        <div>${content_in}</div>,
+        `<div>${content_in}</div>`,
         "text/xml"
       );
       let imgs = doc.querySelectorAll("img:not(:first-child)");
@@ -40,7 +40,7 @@ function Page({ data, redirect, pid, referer }) {
 
   useEffect(() => {
     if (redirect) {
-      window.location.href = https://${config.BLOG_URL}?p=${pid};
+      window.location.href = `https://${config.BLOG_URL}?p=${pid}`;
     }
   }, [referer, redirect, pid]);
 
@@ -109,7 +109,7 @@ export async function getServerSideProps({ params, req, query }) {
         return {
             redirect: {
                 permanent: false,
-                destination: https://${config.BLOG_URL}?p=${pid}
+                destination: `https://${config.BLOG_URL}?p=${pid}`
             }
         }
     }
@@ -117,36 +117,36 @@ export async function getServerSideProps({ params, req, query }) {
 
  
   let data;
-  // await dbConnect();
+  await dbConnect();
 
   //check if post exist in mognodb
-  // let post = await Post.findOne({ pid });
-  // if (!post) {
+  let post = await Post.findOne({ pid });
+  if (!post) {
     console.log("fetching from wordpress");
-    const url = https://${config.BLOG_URL}/?rest_route=/wp/v2/posts/${pid};
+    const url = `https://${config.BLOG_URL}/?rest_route=/wp/v2/posts/${pid}`;
 
     const res = await fetch(url);
     data = await res.json(); //replace image url to use proxy api
     data.content["rendered"] = data.content["rendered"].replaceAll(
-      https://${config.BLOG_URL}/wp-content,
+      `https://${config.BLOG_URL}/wp-content`,
       "/api/wp-content"
     );
     data.content["rendered"] = data.content["rendered"].replaceAll(
-      https://www.${config.BLOG_URL}/wp-content,
+      `https://www.${config.BLOG_URL}/wp-content`,
       "/api/wp-content"
     );
 
     //save post to mongodb
-    // const post = new Post({
-    //   pid,
-    //   data,
-    // });
+    const post = new Post({
+      pid,
+      data,
+    });
 
-  //   await post.save();
-  // } else {
-  //   console.log("found in mongodb");
-  //   data = post.data;
-  // }
+    await post.save();
+  } else {
+    console.log("found in mongodb");
+    data = post.data;
+  }
 
   return {
     props: {
