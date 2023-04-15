@@ -137,12 +137,12 @@ export async function getServerSideProps({ params, req, query }) {
     );
 
     //save post to mongodb
-    const post = new Post({
-      pid,
-      data,
-    });
+   // const post = new Post({
+   //   pid,
+   //   data,
+   // });
 
-    await post.save();
+   // await post.save();
  // } else {
  //   console.log("found in mongodb");
  //   data = post.data;
