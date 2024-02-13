@@ -1,3 +1,3 @@
 export default {
-  BLOG_URL: "thaiupdates.info",
+  BLOG_URL: "military.usnews.uk",
 };
